@@ -53,6 +53,9 @@
                   },
                   {
                     "path": "Core/Src/OLED_Font.c"
+                  },
+                  {
+                    "path": "Core/Src/motor.c"
                   }
                 ],
                 "folders": []

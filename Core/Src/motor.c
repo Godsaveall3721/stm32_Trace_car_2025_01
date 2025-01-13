@@ -28,14 +28,14 @@
 
     switch(num)
     {
-        case 1:goto Right_front; break;
-        case 2:goto Right_back; break;
-        case 3:goto Left_back; break;
-        case 4:goto Left_front; break;
+        case 1:goto Right_front;
+        case 2:goto Right_back;
+        case 3:goto Left_back; 
+        case 4:goto Left_front;
         default:
-            flag = 0; break;  
+            flag = 0; 
+            goto end;  
     }
-    if (flag == 0) OLED_ShowString(1,1,"error in Motor",16,0); goto end;
     Right_front: // 1号轮
     HAL_GPIO_WritePin(GPIOC,GPIO_PIN_9,A);
     HAL_GPIO_WritePin(GPIOC,GPIO_PIN_8,B);
@@ -58,6 +58,7 @@
         goto end;
 
     end: 
+    if (flag == 0) OLED_ShowString(1,1,"error in Motor",16,0);
     A = 0;
     B = 0;
     }

@@ -44,6 +44,15 @@
                   },
                   {
                     "path": "Core/Src/stm32f1xx_hal_msp.c"
+                  },
+                  {
+                    "path": "Core/Src/encoder.c"
+                  },
+                  {
+                    "path": "Core/Src/OLED.c"
+                  },
+                  {
+                    "path": "Core/Src/OLED_Font.c"
                   }
                 ],
                 "folders": []

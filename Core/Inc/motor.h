@@ -8,6 +8,7 @@ extern "C" {
 
 #include "stm32f1xx_hal.h"
 #include <oled.h>
+#include <tim.h>
 
 typedef struct
 {
@@ -20,7 +21,8 @@ typedef struct
     void (*motornum)(uint8_t num, uint32_t motorspeed, uint8_t direction);
   
 }Motor_pwm_t;
-
+void motor_(uint8_t num, uint32_t motorspeed, uint8_t direction);
+void motor_control(Motor_pwm_t *opt, uint8_t num, uint32_t motorspeed, uint8_t direction);
 
 #ifdef __cplusplus
 }

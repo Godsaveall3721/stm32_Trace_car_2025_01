@@ -27,6 +27,7 @@
 #include <OLED.h>
 #include <stdint.h>
 #include <encoder.h>
+#include <motor.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -77,6 +78,9 @@ int main(void)
   encoderInfo.getinfo = get_Encoder_info;
   encoderInfo.pritinfo = pri_Encoder_inf;
 
+  Motor_pwm_t Motorcontrol;
+  Motorcontrol.motornum = motor_;
+
 
   /* USER CODE END 1 */
 
@@ -125,6 +129,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
   get_Encoder_information_printf(&encoderInfo, htim4, &Enc_Count, &speed);
+  motor_control(&Motorcontrol, 1, 4000, 1);
   }
   /* USER CODE END 3 */
 }

@@ -24,7 +24,9 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include <OLED.h>
+#include <stdint.h>
+#include <encoder.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -45,6 +47,8 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+uint32_t Enc_Count = 0; //某个马达的圈数
+int speed = 0;          //某个马达的速度
 
 /* USER CODE END PV */
 
@@ -67,6 +71,12 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
+
+  //关联相关函数,初始化Encoder_information_t结构体对象
+  Encoder_information_t encoderInfo;
+  encoderInfo.getinfo = get_Encoder_info;
+  encoderInfo.pritinfo = pri_Encoder_inf;
+
 
   /* USER CODE END 1 */
 
@@ -97,6 +107,13 @@ int main(void)
   MX_TIM6_Init();
   MX_TIM8_Init();
   /* USER CODE BEGIN 2 */
+  HAL_TIM_Encoder_Start(&htim2, TIM_CHANNEL_ALL); //启动编码器
+  HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL); //启动编码器
+  HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_ALL); //启动编码器
+  HAL_TIM_Encoder_Start(&htim5, TIM_CHANNEL_ALL); //启动编码器
+	OLED_Init();
+	OLED_Clear();
+	OLED_ShowString(1,1,"abd",16,0);
 
   /* USER CODE END 2 */
 
@@ -107,6 +124,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+  get_Encoder_information_printf(&encoderInfo, htim4, &Enc_Count, &speed);
   }
   /* USER CODE END 3 */
 }

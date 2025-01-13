@@ -556,10 +556,10 @@ ARM Macro Assembler    Page 9
               00000000 
 Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M3 --apcs=interw
 ork --depend=litter_car\startup_stm32f103xe.d -olitter_car\startup_stm32f103xe.
-o -I.\RTE\_litter_car -ID:\Keil_v5\ARM\PACK\ARM\CMSIS\6.1.0\CMSIS\Core\Include 
--ID:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.4.1\Device\Include --predefine="__UV
-ISION_VERSION SETA 541" --predefine="STM32F10X_HD SETA 1" --predefine="_RTE_ SE
-TA 1" --list=startup_stm32f103xe.lst startup_stm32f103xe.s
+o -I.\RTE\_litter_car -ID:\keil5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include -ID:\ke
+il5\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\Include --predefine="__UVISION_VER
+SION SETA 524" --predefine="_RTE_ SETA 1" --predefine="STM32F10X_HD SETA 1" --l
+ist=startup_stm32f103xe.lst startup_stm32f103xe.s
 
 
 

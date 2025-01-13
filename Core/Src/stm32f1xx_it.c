@@ -22,6 +22,7 @@
 #include "stm32f1xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "tim.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -51,7 +52,22 @@
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+extern uint16_t counteo;
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+        // 处理外部中断事件，例如控制 LED 灯闪烁
+        HAL_TIM_Base_Start(&htim6);
+		while(1)
+		{
+			if(HAL_GPIO_ReadPin(GPIOC,GPIO_PIN_0)==0)
+			{
+			break;
+			}
+		}
+		counteo = __HAL_TIM_GET_COUNTER(&htim6);
+		HAL_TIM_Base_Stop(&htim6);
+		__HAL_TIM_SET_COUNTER(&htim6,0);
+}
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/

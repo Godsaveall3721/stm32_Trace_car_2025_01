@@ -49,7 +49,7 @@
 /* USER CODE BEGIN PV */
 uint32_t Enc_Count = 0; //某个马达的圈数
 int speed = 0;          //某个马达的速度
-
+uint16_t counteo;       //tim6定时器的值
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/

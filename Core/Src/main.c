@@ -31,6 +31,7 @@
 #include <encoder.h>
 #include <motor.h>
 #include <Servo.h>
+#include "logic.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -81,8 +82,8 @@ int main(void)
   encoderInfo.getinfo = get_Encoder_info;
   encoderInfo.pritinfo = pri_Encoder_inf;
 
-  Motor_pwm_t Motorcontrol;
-  Motorcontrol.motornum = motor_;
+  // Motor_pwm_t Motorcontrol;
+  // Motorcontrol.motornum = motor_;
 
 
   /* USER CODE END 1 */
@@ -123,33 +124,31 @@ int main(void)
   HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL); //启动编码器
   HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_ALL); //启动编码器
   HAL_TIM_Encoder_Start(&htim5, TIM_CHANNEL_ALL); //启动编码器
-	OLED_Init();
-	OLED_Clear();
-	OLED_ShowString(1,1,"abd",16,0);
+	OLED_Init();       
+  OLED_Clear();  
+	//HAL_Delay(3000);	
 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  int i = 50;
+  // int i = 0;
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
   
-  Servo_start();
-  motor_control(&Motorcontrol, 1, i, 1);
-  motor_control(&Motorcontrol, 2, i, 1);
-  motor_control(&Motorcontrol, 3, i, 1);
-  motor_control(&Motorcontrol, 4, i, 1);
-  if (i >= 100) i = 50;
-  i++;
-  get_Encoder_information_printf(&encoderInfo, htim2, &Enc_Count, &speed);
-  // get_Encoder_information_printf(&encoderInfo, htim3, &Enc_Count, &speed);
-  // get_Encoder_information_printf(&encoderInfo, htim4, &Enc_Count, &speed);
-  // get_Encoder_information_printf(&encoderInfo, htim5, &Enc_Count, &speed);
-  HAL_Delay(200);
+  // Servo_start();
+
+
+
+  // if (i >= 100) i = 0;
+  // i = i+5;
+  // get_Encoder_information_printf(&encoderInfo, htim2, &Enc_Count, &speed);
+  
+  OLED_Showdecimal(4,2,Gray_Offset_value(),6,0,16, 0);
+  HAL_Delay(500);
   }
   /* USER CODE END 3 */
 }

@@ -11,8 +11,8 @@ void Servo_start(void)
 	while(i<2500)
 	{
 		i+=100;
-	 __HAL_TIM_SET_COMPARE(&htim8,TIM_CHANNEL_1,i);	
-	HAL_Delay(300);
+	 __HAL_TIM_SET_COMPARE(&htim8,TIM_CHANNEL_1,i);
+	HAL_Delay(300);	
 	}
    k=1;
 }else if(k==1)

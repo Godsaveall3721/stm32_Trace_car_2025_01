@@ -37,8 +37,8 @@
             goto end;  
     }
     Right_front: // 1号轮
-    HAL_GPIO_WritePin(GPIOC,GPIO_PIN_9,A);
-    HAL_GPIO_WritePin(GPIOC,GPIO_PIN_8,B);
+    HAL_GPIO_WritePin(GPIOC,GPIO_PIN_9,B);
+    HAL_GPIO_WritePin(GPIOC,GPIO_PIN_8,A);
     __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, motorspeed);
         goto end;
     Right_back: // 2号轮
@@ -47,8 +47,8 @@
     __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, motorspeed);
         goto end;
     Left_back: // 3号轮
-    HAL_GPIO_WritePin(GPIOB,GPIO_PIN_12,A);
-    HAL_GPIO_WritePin(GPIOB,GPIO_PIN_13,B);
+    HAL_GPIO_WritePin(GPIOB,GPIO_PIN_12,B);
+    HAL_GPIO_WritePin(GPIOB,GPIO_PIN_13,A);
     __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, motorspeed);
         goto end;
     Left_front: // 4号轮

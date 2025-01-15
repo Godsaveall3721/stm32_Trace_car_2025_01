@@ -56,6 +56,12 @@
                   },
                   {
                     "path": "Core/Src/motor.c"
+                  },
+                  {
+                    "path": "Core/Src/HCSR04.c"
+                  },
+                  {
+                    "path": "Core/Src/Servo.c"
                   }
                 ],
                 "folders": []

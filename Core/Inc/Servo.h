@@ -21,7 +21,7 @@ void Servo_left(void);
 //舵机上的超声波转向右方
 void Servo_right(void);
 
-	#ifdef __cplusplus
+#ifdef __cplusplus
 }
 #endif
 

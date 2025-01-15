@@ -5,7 +5,7 @@
 //舵机180度来回旋转
 void Servo_start(void)
 {
-	uint16_t i,k;
+	uint16_t i=0,k=0;
   if(k==0)
 {
 	while(i<2500)
@@ -15,8 +15,7 @@ void Servo_start(void)
 	HAL_Delay(300);
 	}
    k=1;
-}
-	else if(k==1)
+}else if(k==1)
 	{
 		while(i>500)
 		{

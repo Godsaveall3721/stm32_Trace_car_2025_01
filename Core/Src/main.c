@@ -30,6 +30,7 @@
 #include <stdint.h>
 #include <encoder.h>
 #include <motor.h>
+#include <Servo.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -114,6 +115,10 @@ int main(void)
   MX_TIM8_Init();
   /* USER CODE BEGIN 2 */
   HAL_TIM_PWM_Start(&htim1,TIM_CHANNEL_1);
+  HAL_TIM_PWM_Start(&htim1,TIM_CHANNEL_2);
+  HAL_TIM_PWM_Start(&htim1,TIM_CHANNEL_3);
+  HAL_TIM_PWM_Start(&htim1,TIM_CHANNEL_4);
+  HAL_TIM_PWM_Start(&htim8,TIM_CHANNEL_1);
   HAL_TIM_Encoder_Start(&htim2, TIM_CHANNEL_ALL); //启动编码器
   HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL); //启动编码器
   HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_ALL); //启动编码器
@@ -126,17 +131,24 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  int i = 0;
+  int i = 50;
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-
-  get_Encoder_information_printf(&encoderInfo, htim4, &Enc_Count, &speed);
+  
+  Servo_start();
   motor_control(&Motorcontrol, 1, i, 1);
-  if (i >= 100) i = 0;
+  motor_control(&Motorcontrol, 2, i, 1);
+  motor_control(&Motorcontrol, 3, i, 1);
+  motor_control(&Motorcontrol, 4, i, 1);
+  if (i >= 100) i = 50;
   i++;
+  get_Encoder_information_printf(&encoderInfo, htim2, &Enc_Count, &speed);
+  // get_Encoder_information_printf(&encoderInfo, htim3, &Enc_Count, &speed);
+  // get_Encoder_information_printf(&encoderInfo, htim4, &Enc_Count, &speed);
+  // get_Encoder_information_printf(&encoderInfo, htim5, &Enc_Count, &speed);
   HAL_Delay(200);
   }
   /* USER CODE END 3 */

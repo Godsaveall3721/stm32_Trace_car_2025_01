@@ -55,13 +55,16 @@
                     "path": "Core/Src/OLED_Font.c"
                   },
                   {
-                    "path": "Core/Src/motor.c"
+                    "path": "Core/Src/Servo.c"
                   },
                   {
                     "path": "Core/Src/HCSR04.c"
                   },
                   {
-                    "path": "Core/Src/Servo.c"
+                    "path": "Core/Src/logic.c"
+                  },
+                  {
+                    "path": "Core/Src/motor.c"
                   }
                 ],
                 "folders": []
@@ -291,7 +294,6 @@
           "Drivers/STM32F1xx_HAL_Driver/Inc/Legacy",
           "Drivers/CMSIS/Device/ST/STM32F1xx/Include",
           "Drivers/CMSIS/Include",
-          ".cmsis/include",
           "MDK-ARM/RTE/_litter_car"
         ],
         "libList": [],

@@ -133,6 +133,7 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   // int i = 0;
+  HAL_Delay(500);
   while (1)
   {
     /* USER CODE END WHILE */
@@ -147,8 +148,9 @@ int main(void)
   // i = i+5;
   // get_Encoder_information_printf(&encoderInfo, htim2, &Enc_Count, &speed);
   
-  OLED_Showdecimal(4,2,Gray_Offset_value(),6,0,16, 0);
-  HAL_Delay(500);
+  // OLED_Showdecimal(4,2,Gray_Offset_value(),6,0,16, 0);
+  Sandwich_function_01(10);
+  // Turn_round(20, 30, 1); 
   }
   /* USER CODE END 3 */
 }

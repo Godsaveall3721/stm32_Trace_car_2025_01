@@ -114,8 +114,8 @@
     }else
     {
         temp2 = value_;
-        if (temp2 >= 25){//18
-            while (temp2 >= 28) {//18
+        if (temp2 >= 18){//18
+            while (temp2 >= 21) {//18
                     value_ -= 2;
                     temp2 = value_;
             }

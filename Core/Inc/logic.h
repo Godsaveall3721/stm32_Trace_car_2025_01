@@ -24,6 +24,14 @@ extern "C" {
 #define gray_7  GPIOC,GPIO_PIN_5
 #define gray_8  GPIOB,GPIO_PIN_2
 
+//定义pid结构体
+struct PID
+{
+	float kp;
+	float ki;
+	float kd;
+};
+typedef struct PID _PID;
 
 #define PWM_Period_Motor 100  // 
 

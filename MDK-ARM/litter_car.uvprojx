@@ -204,7 +204,7 @@
             <Ro2Chk>0</Ro2Chk>
             <Ro3Chk>0</Ro3Chk>
             <Ir1Chk>1</Ir1Chk>
-            <Ir2Chk>1</Ir2Chk>
+            <Ir2Chk>0</Ir2Chk>
             <Ra1Chk>0</Ra1Chk>
             <Ra2Chk>0</Ra2Chk>
             <Ra3Chk>0</Ra3Chk>
@@ -504,6 +504,26 @@
               <FileName>HCSR04.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Core\Src\HCSR04.c</FilePath>
+            </File>
+            <File>
+              <FileName>logic.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Core\Inc\logic.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Core\Inc\motor.h</FilePath>
+            </File>
+            <File>
+              <FileName>logic.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\logic.c</FilePath>
+            </File>
+            <File>
+              <FileName>motor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\motor.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -148,8 +148,8 @@ int main(void)
   // i = i+5;
   // get_Encoder_information_printf(&encoderInfo, htim2, &Enc_Count, &speed);
   
-  // OLED_Showdecimal(4,2,Gray_Offset_value(),6,0,16, 0);
-  Sandwich_function_01(10);
+  OLED_Showdecimal(4,2,Gray_Offset_value(),6,0,16, 0);
+  Sandwich_function_01(15);
   // Turn_round(20, 30, 1); 
   }
   /* USER CODE END 3 */

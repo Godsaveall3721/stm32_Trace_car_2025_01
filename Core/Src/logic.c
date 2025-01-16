@@ -71,16 +71,12 @@
     }
 
     
-
-
     /**
      * @brief 以灰度中心建立直线坐标系函数,根据偏移程度返回偏偏移量的函数
     */
-    int value_ = 0;
-	 uint8_t temp1;
+	uint8_t temp1;
     int Gray_Offset_value(void){
-    int temp2 = 0;
-
+    int value_ = 0;
     temp1 = 
     0xFF & ( 
     (HAL_GPIO_ReadPin(gray_1) << 0) | 
@@ -91,9 +87,6 @@
     (HAL_GPIO_ReadPin(gray_6) << 5) | 
     (HAL_GPIO_ReadPin(gray_7) << 6) | 
     (HAL_GPIO_ReadPin(gray_8) << 7) ); 
-
-    //temp1 = ~temp1;
-
     value_ += -3 * ( (temp1 & 0x1) & ((temp1 >> 1) & 0x1) ); // 1
     value_ += -2 * ( ((temp1 >> 2) & 0x1) & ((temp1 >> 1) & 0x1) ); // 2
     value_ += -1 * ( ((temp1 >> 2) & 0x1) & ((temp1 >> 3) & 0x1) ); // 3
@@ -101,31 +94,48 @@
     value_ +=  1 * ( ((temp1 >> 4) & 0x1) & ((temp1 >> 5) & 0x1) ); // 5
     value_ +=  2 * ( ((temp1 >> 6) & 0x1) & ((temp1 >> 5) & 0x1) ); // 6
     value_ +=  3 * ( ((temp1 >> 6) & 0x1) & ((temp1 >> 7) & 0x1) ); // 7
+    return value_;
+    }
+    
+    
+    //定义转向pid参数结构体
+    _PID pid_=
+    {
+        .kp = 1,			//赋值比例值
+        .ki = 0,			//赋值积分值(用不到)
+        .kd = 0			//赋值微分值
+    };		
 
+    /**
+     * @brief 传入灰度偏移量,函数
+    */
+    int value_old = 0;
+    int PID_P(int value_)
+    {
+    value_old += value_;
+    value_ = value_ * pid_.kp; // 赋值比例值
+    int temp2 = 0;
+
+    // 处理 value 导出 new value
     if (value_ < 0){
         temp2 = -value_;
-        if (temp2 >= 18){//15
-            while (temp2 >= 21) {//18
+            while (temp2 >= 10) {//18
                  value_ += 2;
                  temp2 = -value_;
             }
-        }
         if(temp2 < 2) value_ = 0;
     }else
     {
         temp2 = value_;
-        if (temp2 >= 18){//18
-            while (temp2 >= 21) {//18
+            while (temp2 >= 10) {//18
                     value_ -= 2;
                     temp2 = value_;
             }
-        }
-        if(temp2 < 5) value_ = 0;
+        if(temp2 < 2) value_ = 0;
     }
-
-    return value_;
+    int value_new = value_;
+    return (int)(value_new + pid_.kd * (value_new - value_old));
     }
-
 
 
     /**
@@ -141,21 +151,21 @@
     uint8_t flag;
     long temp = 0;
 
-    temp = Gray_Offset_value(); // 取的偏移值
-	if(temp1==0)		
-	{
-		count++;
-		if(count<=4)
-		{
-		Turn_round(20, 0, 3);
-		HAL_Delay(400);	
-	    flag = 5; //停车
-		Turn_round(0, 0, 5);
-		HAL_GPIO_WritePin(LED_ON,0);
-		HAL_Delay(3000);
-		goto end;
-		}
-	}
+    temp = PID_P(Gray_Offset_value()); // 取的偏移值
+	// if(temp1==0)		
+	// {
+	// 	count++;
+	// 	if(count<=4)
+	// 	{
+	// 	Turn_round(20, 0, 3);
+	// 	HAL_Delay(400);	
+	//     flag = 5; //停车
+	// 	Turn_round(0, 0, 5);
+	// 	HAL_GPIO_WritePin(LED_ON,0);
+	// 	HAL_Delay(3000);
+	// 	goto end;
+	// 	}
+	// }
     if (temp == 0) // 判断拐弯方向 
     {
         flag = 3; // 直走
@@ -166,8 +176,7 @@
     }else if (temp > 0) // 判断拐弯方向 
     {
         flag = 2; // 右拐
-    }
-	else{
+    }else{
         OLED_ShowString(1,1,"error in Logic 002",16,0);
     }
     Turn_round(base_speed, temp, flag); 

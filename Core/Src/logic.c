@@ -84,7 +84,7 @@
     (HAL_GPIO_ReadPin(gray_7) << 6) | 
     (HAL_GPIO_ReadPin(gray_8) << 7) ); 
 
-    temp1 = ~temp1;
+    //temp1 = ~temp1;
 
     value_ += -3 * ( (temp1 & 0x1) & ((temp1 >> 1) & 0x1) ); // 1
     value_ += -2 * ( ((temp1 >> 2) & 0x1) & ((temp1 >> 1) & 0x1) ); // 2
@@ -96,8 +96,8 @@
 
     if (value_ < 0){
         temp2 = -value_;
-        if (temp2 >= 15){
-            while (temp2 >= 18) {
+        if (temp2 >= 20){//15
+            while (temp2 >= 20) {//18
                  value_ += 2;
                  temp2 = -value_;
             }
@@ -106,8 +106,8 @@
     }else
     {
         temp2 = value_;
-        if (temp2 >= 18){
-            while (temp2 >= 18) {
+        if (temp2 >= 20){//18
+            while (temp2 >= 20) {//18
                     value_ -= 2;
                     temp2 = value_;
             }
@@ -139,11 +139,11 @@
         flag = 3; // 直走
     }else if (temp < 0) // 判断拐弯方向 
     {
-        flag = 2; // 左拐
+        flag = 1; // 左拐
         temp = -temp; // 负值反转
     }else if (temp > 0) // 判断拐弯方向 
     {
-        flag = 1; // 右拐
+        flag = 2; // 右拐
     }else{
         OLED_ShowString(1,1,"error in Logic 002",16,0);
     }

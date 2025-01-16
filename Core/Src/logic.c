@@ -24,6 +24,7 @@
         case 2:goto Left_;
         case 3:goto Nullgo_;
         case 4:goto Nullback_;
+		case 5:goto Park_;
         default:
             goto error;  
     }
@@ -55,6 +56,13 @@
     motor_control(&Motorlogic, 4, base_speed, 2);
         goto end;
 
+	Park_:
+	motor_control(&Motorlogic, 1, base_speed, 1);
+    motor_control(&Motorlogic, 2, base_speed, 1);
+    motor_control(&Motorlogic, 3, base_speed, 1);
+    motor_control(&Motorlogic, 4, base_speed, 1);
+        goto end;
+		
     error:
         OLED_ShowString(1,1,"error in Logic 001",16,0);
         goto end;
@@ -69,8 +77,8 @@
      * @brief 以灰度中心建立直线坐标系函数,根据偏移程度返回偏偏移量的函数
     */
     int value_ = 0;
+	 uint8_t temp1;
     int Gray_Offset_value(void){
-    uint8_t temp1;
     int temp2 = 0;
 
     temp1 = 
@@ -96,8 +104,8 @@
 
     if (value_ < 0){
         temp2 = -value_;
-        if (temp2 >= 20){//15
-            while (temp2 >= 20) {//18
+        if (temp2 >= 18){//15
+            while (temp2 >= 21) {//18
                  value_ += 2;
                  temp2 = -value_;
             }
@@ -106,8 +114,8 @@
     }else
     {
         temp2 = value_;
-        if (temp2 >= 20){//18
-            while (temp2 >= 20) {//18
+        if (temp2 >= 18){//18
+            while (temp2 >= 21) {//18
                     value_ -= 2;
                     temp2 = value_;
             }
@@ -124,6 +132,7 @@
      * @brief 通过灰度控制小车拐弯的逻辑函数
      * @param base_speed (uint8_t) 小车基本速度
     */
+	int count=0;
     void Sandwich_function_01(uint8_t base_speed)
     {
     Motor_pwm_t Motorlogic;
@@ -133,7 +142,20 @@
     long temp = 0;
 
     temp = Gray_Offset_value(); // 取的偏移值
-
+	if(temp1==0)		
+	{
+		count++;
+		if(count<=4)
+		{
+		Turn_round(20, 0, 3);
+		HAL_Delay(400);	
+	    flag = 5; //停车
+		Turn_round(0, 0, 5);
+		HAL_GPIO_WritePin(LED_ON,0);
+		HAL_Delay(3000);
+		goto end;
+		}
+	}
     if (temp == 0) // 判断拐弯方向 
     {
         flag = 3; // 直走
@@ -144,24 +166,11 @@
     }else if (temp > 0) // 判断拐弯方向 
     {
         flag = 2; // 右拐
-    }else{
+    }
+	else{
         OLED_ShowString(1,1,"error in Logic 002",16,0);
     }
     Turn_round(base_speed, temp, flag); 
-
-
-    // do {
-    // temp = atan(Gray_Offset_value())*20000./314;
-    // if (temp < 0) temp = -temp;
-    // if(temp < 10) break;
-    // // i++;                   // 防止卡循环
-    // // if(i > 2500) break;
-    // } while(1);
-
-
-    // motor_control(&Motorlogic, 1, base_speed, 1);
-    // motor_control(&Motorlogic, 2, base_speed, 1);
-    // motor_control(&Motorlogic, 3, base_speed, 1);
-    // motor_control(&Motorlogic, 4, base_speed, 1);
+	end: ;
     }
 

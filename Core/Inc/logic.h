@@ -12,6 +12,7 @@ extern "C" {
 #include <math.h>
 #include <stdint.h>
 
+#define LED_ON GPIOC,GPIO_PIN_13
 #define PWM_Period_Motor 100
 
 #define gray_1  GPIOB,GPIO_PIN_1

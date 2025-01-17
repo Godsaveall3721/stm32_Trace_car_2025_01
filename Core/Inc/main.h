@@ -62,6 +62,8 @@ void Error_Handler(void);
 #define Echo_EXTI_IRQn EXTI0_IRQn
 #define Tring_Pin GPIO_PIN_1
 #define Tring_GPIO_Port GPIOC
+#define LED_ON_Pin GPIO_PIN_13
+#define LED_ON_GPIO_Port GPIOC
 #define gray_scale_4_Pin GPIO_PIN_2
 #define gray_scale_4_GPIO_Port GPIOC
 #define gray_scale_5_Pin GPIO_PIN_3

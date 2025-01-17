@@ -149,7 +149,7 @@ int main(void)
   // get_Encoder_information_printf(&encoderInfo, htim2, &Enc_Count, &speed);
   
   OLED_Showdecimal(4,2,Gray_Offset_value(),6,0,16, 0);
-  Sandwich_function_01(10);
+  Sandwich_function_01(20);
 	  
 //	 Turn_round(20, 0, 3);
 //	  HAL_Delay(3000);

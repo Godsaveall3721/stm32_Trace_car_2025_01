@@ -103,23 +103,23 @@
     {
         .kp = 1,			//赋值比例值
         .ki = 0,			//赋值积分值(用不到)
-        .kd = 0			//赋值微分值
+        .kd = -0.6			//赋值微分值
     };		
 
     /**
      * @brief 传入灰度偏移量,函数
     */
-    int value_old = 0;
     int PID_P(int value_)
     {
-    value_old += value_;
+    int value_old = 0;
+    value_old = value_;
     value_ = value_ * pid_.kp; // 赋值比例值
     int temp2 = 0;
 
     // 处理 value 导出 new value
     if (value_ < 0){
         temp2 = -value_;
-            while (temp2 >= 10) {//18
+            while (temp2 >= 6) {//18
                  value_ += 2;
                  temp2 = -value_;
             }
@@ -127,7 +127,7 @@
     }else
     {
         temp2 = value_;
-            while (temp2 >= 10) {//18
+            while (temp2 >= 6) {//18
                     value_ -= 2;
                     temp2 = value_;
             }
@@ -150,22 +150,22 @@
 
     uint8_t flag;
     long temp = 0;
-
     temp = PID_P(Gray_Offset_value()); // 取的偏移值
-	// if(temp1==0)		
-	// {
-	// 	count++;
-	// 	if(count<=4)
-	// 	{
-	// 	Turn_round(20, 0, 3);
-	// 	HAL_Delay(400);	
-	//     flag = 5; //停车
-	// 	Turn_round(0, 0, 5);
-	// 	HAL_GPIO_WritePin(LED_ON,0);
-	// 	HAL_Delay(3000);
-	// 	goto end;
-	// 	}
-	// }
+	if(temp1==0)		
+	{
+		count++;
+		if(count<=4)
+		{
+		Turn_round(20, 0, 3);
+		HAL_Delay(400);	
+	    flag = 5; //停车
+		Turn_round(0, 0, 5);
+		HAL_GPIO_WritePin(LED_ON_GPIO_Port,LED_ON_Pin,1);
+		HAL_Delay(3000);
+		HAL_GPIO_WritePin(LED_ON_GPIO_Port,LED_ON_Pin,0);
+		goto end;
+		}
+	}
     if (temp == 0) // 判断拐弯方向 
     {
         flag = 3; // 直走

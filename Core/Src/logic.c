@@ -1,5 +1,5 @@
 #include "logic.h"
-#include "oled.h"
+#include "Servo.h"
 #include "stm32f1xx_hal.h"
 #include <stdint.h>
 
@@ -28,8 +28,14 @@
         case 3:goto Nullgo_;
         case 4:goto Nullback_;
 		case 5:goto Park_;
-        case 6:goto Right_don;
-		case 7:goto Left_don;
+        case 6:goto Left_don;
+		case 7:goto Right_don;
+
+        case 8:goto Right_don_2;  //后轮部分太光滑
+        case 9:goto Left_don_2;
+
+        case 10:goto Right_don_3;  //前轮部分太光滑
+        case 11:goto Left_don_3;
         default:
             goto error;  
     }
@@ -68,20 +74,47 @@
     motor_control(&Motorlogic, 4, base_speed, 1);
         goto end;
 
-	Right_don:
+	Left_don:
 	motor_control(&Motorlogic, 1, base_speed, 1); // 内圈
     motor_control(&Motorlogic, 2, num1, 1); // 外圈
     motor_control(&Motorlogic, 3, 0, 0);
     motor_control(&Motorlogic, 4,0, 0);
         goto end;
 
-	Left_don:
+	Right_don:
 	motor_control(&Motorlogic, 1, 0, 0);
     motor_control(&Motorlogic, 2, 0, 0);
     motor_control(&Motorlogic, 3, num1, 1); // 外圈
     motor_control(&Motorlogic, 4,base_speed, 1); // 内圈
         goto end;
+
+	Right_don_2:
+	motor_control(&Motorlogic, 1, base_speed, 2);
+    motor_control(&Motorlogic, 2, 0, 0);
+    motor_control(&Motorlogic, 3, num1, 1); // 外圈
+    motor_control(&Motorlogic, 4,base_speed, 1); // 内圈
+        goto end;
+
+	Left_don_2:
+	motor_control(&Motorlogic, 1, base_speed, 1); // 内圈
+    motor_control(&Motorlogic, 2, num1, 1); // 外圈
+    motor_control(&Motorlogic, 3, 0, 0);
+    motor_control(&Motorlogic, 4,base_speed, 2);
+        goto end;
 		
+    Right_don_3:
+	motor_control(&Motorlogic, 1, 0, 0);
+    motor_control(&Motorlogic, 2, base_speed, 2);
+    motor_control(&Motorlogic, 3, num1, 1); // 外圈
+    motor_control(&Motorlogic, 4,base_speed, 1); // 内圈
+        goto end;
+
+    Left_don_3:
+	motor_control(&Motorlogic, 1, base_speed, 1); // 内圈
+    motor_control(&Motorlogic, 2, num1, 1); // 外圈
+    motor_control(&Motorlogic, 3, base_speed, 2);
+    motor_control(&Motorlogic, 4,0, 0);
+
     error:
         OLED_ShowString(1,1,"error in Logic 001",16,0);
         goto end;
@@ -168,28 +201,32 @@
     Motor_pwm_t Motorlogic;
     Motorlogic.motornum = motor_;
 
-    uint8_t flag;
+    static uint8_t flag;
     long temp = 0;
     temp = PID_P(Gray_Offset_value()); // 取的偏移值
 
-        if(temp1==0)		
-        {
-            count++;
-            if(count == 7)
+        if(temp1 == 0)		
             {
-            flag = 5; //停车
-            Turn_round(0, 0, 5);goto end;
-            }
-            if(count>=5)
+            HAL_Delay(10);
+            if (PID_P(Gray_Offset_value()) == 0)  // 防抖
             {
-            Turn_round(20, 0, 3);
-            HAL_Delay(300);	
-            flag = 5; //停车
-            Turn_round(0, 0, 5);
-            HAL_GPIO_WritePin(LED_ON_GPIO_Port,LED_ON_Pin,1);
-            HAL_Delay(3000);
-            HAL_GPIO_WritePin(LED_ON_GPIO_Port,LED_ON_Pin,0);
-            goto end;
+                count++;
+                if(count == 7)
+                {
+                flag = 5; //停车
+                Turn_round(0, 0, 5);goto end;
+                }
+                if(count>=5)
+                {
+                Turn_round(20, 0, 3);
+                HAL_Delay(300);	
+                flag = 5; //停车
+                Turn_round(0, 0, 5);
+                HAL_GPIO_WritePin(LED_ON_GPIO_Port,LED_ON_Pin,1);
+                HAL_Delay(3000);
+                HAL_GPIO_WritePin(LED_ON_GPIO_Port,LED_ON_Pin,0);
+                goto end;
+                }     
             }
 	    }
     
@@ -212,6 +249,10 @@
 
 
 
+    /**
+     * @brief 通过灰度控制小车拐弯的逻辑函数(删除三条线指定停判断逻辑)
+     * @param base_speed (uint8_t) 小车基本速度
+    */
     void Sandwich_function_02_der(uint8_t base_speed){
     Motor_pwm_t Motorlogic;
     Motorlogic.motornum = motor_;
@@ -238,15 +279,19 @@
     }
 
 
+    /**
+     * @brief 通过灰度/超声波控制小车运动的逻辑函数
+     * @param base_speed (uint8_t) 小车基本速度
+    */
     void Sandwich_function_02(uint8_t base_speed){
 
     uint8_t flag_roun = 0;
     int counter=0;
-    OLED_Showdecimal(1, 5,HCSR04_GetValue() , 4, 2, 16, 1);
+   OLED_Showdecimal(1, 5,HCSR04_GetValue() , 4, 2, 16, 1); //////////////////////////////////
 
     if(HCSR04_GetValue()<80)  // 进入田字格转弯
     { 
-        Turn_round(20, 6, 7);  // 开始转弯
+        Turn_round(19, 3, 7);  // 开始转弯
         flag_roun = 0x1 & ~HAL_GPIO_ReadPin(gray_6);    // 读取待测灰度
         if (flag_roun == 1) {                          //如果已经被占,等待解除
         while (1) { 
@@ -267,7 +312,7 @@
     flag_roun = 0; // 清零flag给下个阶段使用
 
     long i = 0; // 为了不让过度转弯,让以下代码毫无用处,故添加i,模拟Delay
-    while (1) {    //沿边沿走到(Ⅲ)
+    while (1) {    // 沿边沿走到(Ⅲ)
             Sandwich_function_02_der(20); // 不能因为Delay而影响灰度扫描
             i++;
             if(i > 200){
@@ -296,7 +341,6 @@
     HAL_Delay(200);
  
 
-    HAL_GPIO_WritePin(LED_ON_GPIO_Port,LED_ON_Pin,1);
     Turn_round(20, 30, 2); // 开始转弯由0号走到1号
     while (1) { // 判定拐弯是否完成
             flag_roun = (1 - HAL_GPIO_ReadPin(gray_8));
@@ -308,8 +352,191 @@
     Turn_round(0, 0, 5); 
     
     flag_roun = 0; // 清零flag给下个阶段使用
-
-
-
-
+    uint8_t flag_roun2 = 0;
+    while(1) {  // 走到2号
+            Sandwich_function_02_der(20);
+            if(HAL_GPIO_ReadPin(gray_1) == 0) flag_roun = 1; // 进入黑色带,等待走出去
+            if(flag_roun == 1){
+                while (1){
+                Sandwich_function_02_der(20);
+                if(HAL_GPIO_ReadPin(gray_1) == 1) {  // 等待走出黑色区域
+                        flag_roun = 0;
+                        flag_roun2++;
+                        break;
+                    }
+                }
+            }
+            if (flag_roun2 == 2) goto end02;
     }
+    end02:
+    Turn_round(0, 0, 5); 
+    // 三明治2正式结束
+}
+
+
+
+    /**
+     * @brief 通过灰度/超声波控制小车运动的逻辑函数
+     * @param base_speed (uint8_t) 小车基本速度
+    */
+    int flag=0;
+    void Sandwich_function_03(uint8_t base_speed){
+        Servo_straight();
+        if(HCSR04_GetValue()<80)
+        {
+            Turn_round(20, 0, 3); 
+            HAL_Delay(400);
+            Turn_round(0, 0, 5); 
+            while(1)
+            {
+             Sandwich_function_02_der(base_speed); 
+               if (HAL_GPIO_ReadPin(gray_1) == 0){
+                  HAL_Delay(10);
+               if (HAL_GPIO_ReadPin(gray_1) == 0){
+                break;
+               }
+            }
+            }
+                   Turn_round(20, 0, 3); 
+                   HAL_Delay(400);
+                   Turn_round(0, 0, 5); 
+                HAL_GPIO_WritePin(LED_ON_GPIO_Port,LED_ON_Pin,1);
+                Servo_straight();
+                }else if(HCSR04_GetValue()>80)//第一个角没有障碍物,开始左拐,向下一个十字路口准备
+         {
+       // Turn_round(24, 18, 6);  // 开始转弯
+       Turn_round(18, 10,11);
+        flag = 0x1 & ~HAL_GPIO_ReadPin(gray_3);    // 读取待测灰度
+        if (flag == 1) {                          //如果已经被占,等待解除
+        while (1) { 
+            flag = 0x1 & ~HAL_GPIO_ReadPin(gray_3);
+            if(flag == 0 ) break;}
+        }
+        while (1) {                                        // 转弯完成时,跳出等待         
+            flag = 0x1 & ~HAL_GPIO_ReadPin(gray_3);
+            if (flag==1)
+            {
+                break;
+            }
+        }
+        Turn_round(0, 0, 5);  // 转弯完成
+
+    HAL_Delay(1200);
+    flag = 0; // 清零flag给下个阶段使用
+            while(1)                                                         //走到下一个十字路口
+            {
+            Sandwich_function_02_der(20);
+            if(HAL_GPIO_ReadPin(gray_1) == 0)
+            {
+                break;
+            }
+            }
+            Turn_round(0, 0, 5);  // 转弯完成
+
+    HAL_Delay(1200);
+    flag = 0; // 清零flag给下个阶段使用
+                                                                            //走到了
+
+
+
+        Servo_left(); 
+        HAL_Delay(500);                                            //旋转舵机开始检测障碍物
+        if(HCSR04_GetValue()<80)                                  //如果有障碍物
+        {
+             Turn_round(20, 0, 3); 
+            HAL_Delay(100);
+            Turn_round(0, 0, 5); 
+        Turn_round(20, 20, 8);  // 开始转弯
+        flag = 0x1 & ~HAL_GPIO_ReadPin(gray_6);    // 读取待测灰度
+        if (flag == 1) {                          //如果已经被占,等待解除
+        while (1) { 
+            flag = 0x1 & ~HAL_GPIO_ReadPin(gray_6);
+            if(flag == 0 ) break;}
+        }
+        while (1) {                                        // 转弯完成时,跳出等待         
+            flag = 0x1 & ~HAL_GPIO_ReadPin(gray_6);
+            if (flag==1)
+            {
+                break;
+            }
+        }
+        Turn_round(0, 0, 5);  // 转弯完成
+
+    HAL_Delay(1200);
+    flag = 0; // 清零flag给下个阶段使用
+    
+    while(1)
+            {
+             Sandwich_function_02_der(base_speed); 
+               if (HAL_GPIO_ReadPin(gray_1) == 0){
+                  HAL_Delay(10);
+               if (HAL_GPIO_ReadPin(gray_1) == 0){
+                break;
+               }
+            }
+            }
+                   Turn_round(20, 0, 3); 
+                   HAL_Delay(400);
+                   Turn_round(0, 0, 5); 
+                HAL_GPIO_WritePin(LED_ON_GPIO_Port,LED_ON_Pin,1);//走到终点
+                Servo_straight();
+        }else if(HCSR04_GetValue()>80)
+        {
+            Turn_round(20, 0, 3); 
+            HAL_Delay(400);
+            while(1)
+            {
+             Sandwich_function_02_der(base_speed); 
+               if (HAL_GPIO_ReadPin(gray_1) == 0){
+                  HAL_Delay(10);
+               if (HAL_GPIO_ReadPin(gray_1) == 0){
+                break;
+               }
+            }
+            }
+            Turn_round(0, 0, 5);  // 转弯完成
+
+    HAL_Delay(1200);
+    flag = 0; // 清零flag给下个阶段使用
+
+
+            if(HCSR04_GetValue()<80)
+            {
+                Turn_round(20, 20, 8);  // 开始转弯
+        flag = 0x1 & ~HAL_GPIO_ReadPin(gray_6);    // 读取待测灰度
+        if (flag == 1) {                          //如果已经被占,等待解除
+        while (1) { 
+            flag = 0x1 & ~HAL_GPIO_ReadPin(gray_6);
+            if(flag == 0 ) break;}
+        }
+        while (1) {                                        // 转弯完成时,跳出等待         
+            flag = 0x1 & ~HAL_GPIO_ReadPin(gray_6);
+            if (flag==1)
+            {
+                break;
+            }
+        }
+        Turn_round(0, 0, 5);  // 转弯完成
+
+    HAL_Delay(1200);
+    flag = 0; // 清零flag给下个阶段使用
+    
+    while(1)
+            {
+             Sandwich_function_02_der(base_speed); 
+               if (HAL_GPIO_ReadPin(gray_8) == 0){
+                  HAL_Delay(10);
+               if (HAL_GPIO_ReadPin(gray_8) == 0){
+                break;
+               }
+            }
+            }
+                Turn_round(20, 0, 3); 
+                   HAL_Delay(400);
+                   Turn_round(0, 0, 5); 
+                HAL_GPIO_WritePin(LED_ON_GPIO_Port,LED_ON_Pin,1);//走到终点
+                Servo_straight();
+        }
+            }
+        }
+         }

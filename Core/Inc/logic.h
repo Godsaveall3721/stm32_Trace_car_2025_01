@@ -48,6 +48,7 @@ typedef struct PID _PID;
     int Gray_Offset_value(void);
     void Sandwich_function_01(uint8_t base_speed);
     void Sandwich_function_02(uint8_t base_speed);
+    void Sandwich_function_03(uint8_t base_speed);
 
 
 

@@ -161,34 +161,22 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   // int i = 0;
 
-HAL_Delay(1500);
+HAL_Delay(1000);
  while(count<=6) // 第一个三明治
  {
  OLED_Showdecimal(4,2,Gray_Offset_value(),6,0,16, 0);
  Sandwich_function_01(20);
  }  // 第一个三明治
  //这里不要加Delay
-Sandwich_function_02(20);
+Sandwich_function_02(18);
+Sandwich_function_03(20);
 
   while (1)
   {
-//  Sandwich_function_01(20);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-  
-  // Servo_start();
-
-
-
-  // if (i >= 100) i = 0;
-  // i = i+5;
-  // get_Encoder_information_printf(&encoderInfo, htim2, &Enc_Count, &speed);
-//	 Turn_round(20, 0, 3);
-//	  HAL_Delay(3000);
-	  // Turn_round(24, 6, 2);
-//	  HAL_Delay(30000);
-  // Turn_round(20, 30, 1); 
+   
   }
   /* USER CODE END 3 */
 }

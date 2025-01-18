@@ -1,3 +1,28 @@
+/**
+ *                    _ooOoo_
+ *                   o8888888o
+ *                   88" . "88
+ *                   (| -_- |)
+ *                    O\ = /O
+ *                ____/`---'\____
+ *              .   ' \\| |// `.
+ *               / \\||| : |||// \
+ *             / _||||| -:- |||||- \
+ *               | | \\\ - /// | |
+ *             | \_| ''\---/'' | |
+ *              \ .-\__ `-` ___/-. /
+ *           ___`. .' /--.--\ `. . __
+ *        ."" '< `.___\_<|>_/___.' >'"".
+ *       | | : `- \`.;`\ _ /`;.`/ - ` : | |
+ *         \ \ `-. \_ __\ /__ _/ .-` / /
+ * ======`-.____`-.___\_____/___.-`____.-'======
+ *                    `=---='
+ *
+ * .............................................
+ *          佛祖保佑             永无BUG
+ */
+
+
 /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
@@ -32,6 +57,7 @@
 #include <motor.h>
 #include <Servo.h>
 #include "logic.h"
+#include "HCSR04.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -54,7 +80,8 @@
 /* USER CODE BEGIN PV */
 uint32_t Enc_Count = 0; //某个马达的圈数
 int speed = 0;          //某个马达的速度
-uint16_t counteo;       //tim6定时器的值
+uint16_t counteo=0;       //tim6定时器的值
+int count = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -124,18 +151,28 @@ int main(void)
   HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL); //启动编码器
   HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_ALL); //启动编码器
   HAL_TIM_Encoder_Start(&htim5, TIM_CHANNEL_ALL); //启动编码器
-	OLED_Init();       
-  OLED_Clear();  
+	// OLED_Init();       
+  // OLED_Clear();  
 	//HAL_Delay(3000);	
-
+  OLED_Start_HCSR04();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   // int i = 0;
-  HAL_Delay(500);
+
+HAL_Delay(1500);
+ while(count<=6) // 第一个三明治
+ {
+ OLED_Showdecimal(4,2,Gray_Offset_value(),6,0,16, 0);
+ Sandwich_function_01(20);
+ }  // 第一个三明治
+ //这里不要加Delay
+Sandwich_function_02(20);
+
   while (1)
   {
+//  Sandwich_function_01(20);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -147,13 +184,9 @@ int main(void)
   // if (i >= 100) i = 0;
   // i = i+5;
   // get_Encoder_information_printf(&encoderInfo, htim2, &Enc_Count, &speed);
-  
-  OLED_Showdecimal(4,2,Gray_Offset_value(),6,0,16, 0);
-  Sandwich_function_01(20);
-	  
 //	 Turn_round(20, 0, 3);
 //	  HAL_Delay(3000);
-//	  Turn_round(0, 0, 5);
+	  // Turn_round(24, 6, 2);
 //	  HAL_Delay(30000);
   // Turn_round(20, 30, 1); 
   }

@@ -1,12 +1,8 @@
 #include "HCSR04.h"
-#include "OLED.h"
-#include "tim.h"
-#include "gpio.h"
-#include "i2c.h"
 
 extern uint16_t counteo;
 //OLED初始化
-void OLED_Start(void)
+void OLED_Start_HCSR04(void)
 {
     OLED_Init();                           //OLED初始
 	OLED_Clear();                         //清屏

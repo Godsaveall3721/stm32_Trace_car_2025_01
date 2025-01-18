@@ -195,7 +195,6 @@
      * @brief 通过灰度控制小车拐弯的逻辑函数
      * @param base_speed (uint8_t) 小车基本速度
     */
-	extern int count;
     void Sandwich_function_01(uint8_t base_speed)
     {
     Motor_pwm_t Motorlogic;
@@ -205,31 +204,6 @@
     long temp = 0;
     temp = PID_P(Gray_Offset_value()); // 取的偏移值
 
-        if(temp1 == 0)		
-            {
-            HAL_Delay(10);
-            if (PID_P(Gray_Offset_value()) == 0)  // 防抖
-            {
-                count++;
-                if(count == 7)
-                {
-                flag = 5; //停车
-                Turn_round(0, 0, 5);goto end;
-                }
-                if(count>=5)
-                {
-                Turn_round(20, 0, 3);
-                HAL_Delay(300);	
-                flag = 5; //停车
-                Turn_round(0, 0, 5);
-                HAL_GPIO_WritePin(LED_ON_GPIO_Port,LED_ON_Pin,1);
-                HAL_Delay(3000);
-                HAL_GPIO_WritePin(LED_ON_GPIO_Port,LED_ON_Pin,0);
-                goto end;
-                }     
-            }
-	    }
-    
     if (temp == 0) // 判断拐弯方向 
     {
         flag = 3; // 直走
@@ -287,7 +261,7 @@
 
     uint8_t flag_roun = 0;
     int counter=0;
-   OLED_Showdecimal(1, 5,HCSR04_GetValue() , 4, 2, 16, 1); //////////////////////////////////
+   OLED_Showdecimal(1, 5,HCSR04_GetValue() , 4, 2, 16, 1); 
 
     if(HCSR04_GetValue()<80)  // 进入田字格转弯
     { 
@@ -403,9 +377,8 @@
                 HAL_GPIO_WritePin(LED_ON_GPIO_Port,LED_ON_Pin,1);
                 Servo_straight();
                 }else if(HCSR04_GetValue()>80)//第一个角没有障碍物,开始左拐,向下一个十字路口准备
-         {
-       // Turn_round(24, 18, 6);  // 开始转弯
-       Turn_round(18, 10,11);
+        {
+       Turn_round(18, 10,11);  // 开始转弯
         flag = 0x1 & ~HAL_GPIO_ReadPin(gray_3);    // 读取待测灰度
         if (flag == 1) {                          //如果已经被占,等待解除
         while (1) { 

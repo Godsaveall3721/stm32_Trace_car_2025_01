@@ -14,7 +14,7 @@ extern "C" {
 	
 	
 //OLED初始化
-void OLED_Start(void);
+void OLED_Start_HCSR04(void);
 
 //us延迟函数
 void delay_us(uint32_t us);

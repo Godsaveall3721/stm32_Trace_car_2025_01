@@ -9,8 +9,10 @@ extern "C" {
 #include "oled.h"
 #include "motor.h"
 #include "gpio.h"
+#include "HCSR04.h"
 #include <math.h>
 #include <stdint.h>
+#include <Servo.h>
 
 #define PWM_Period_Motor 100
 
@@ -45,6 +47,7 @@ typedef struct PID _PID;
     void Turn_round(uint8_t base_speed,uint8_t rad_factor,uint8_t direction);
     int Gray_Offset_value(void);
     void Sandwich_function_01(uint8_t base_speed);
+    void Sandwich_function_02(uint8_t base_speed);
 
 
 

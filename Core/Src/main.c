@@ -81,7 +81,6 @@
 uint32_t Enc_Count = 0; //某个马达的圈数
 int speed = 0;          //某个马达的速度
 uint16_t counteo=0;       //tim6定时器的值
-int count = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -161,34 +160,54 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   // int i = 0;
 
-HAL_Delay(1500);
- while(count<=6) // 第一个三明治
+uint8_t flag_stop = 0;
+uint8_t count = 0;
+HAL_Delay(1000);
+
+ while(count<=5) // 第一个三明治
  {
- OLED_Showdecimal(4,2,Gray_Offset_value(),6,0,16, 0);
- Sandwich_function_01(20);
- }  // 第一个三明治
- //这里不要加Delay
-Sandwich_function_02(20);
+  OLED_Showdecimal(4,2,Gray_Offset_value(),6,0,16, 0);
+  Sandwich_function_01(20);
+        if (HAL_GPIO_ReadPin(gray_1) * HAL_GPIO_ReadPin(gray_8)) flag_stop = 1;
+        if (flag_stop == 1)
+        {
+          while (1)
+          {
+                    OLED_Showdecimal(4,2,Gray_Offset_value(),6,0,16, 0);
+                    Sandwich_function_01(20);
+                    if ((1 - HAL_GPIO_ReadPin(gray_1)) * (1 - HAL_GPIO_ReadPin(gray_8))) {
+                    count++; 
+                    flag_stop = 0; 
+                    break;
+                    }
+
+          }
+    } 
+    if(count == 2 || count ==4) {
+                Turn_round(20, 0, 3); 
+                HAL_Delay(300);
+                Turn_round(0, 0, 5); 
+                Turn_round(0, 0, 5);
+                HAL_GPIO_WritePin(LED_ON_GPIO_Port,LED_ON_Pin,1);
+                HAL_Delay(3000);
+                HAL_GPIO_WritePin(LED_ON_GPIO_Port,LED_ON_Pin,0);
+    }
+    if (count == 5)
+    {
+                Turn_round(0, 0, 5);
+                break;
+    }
+ }
+ // 这里不要加Delay
+Sandwich_function_02(18);
+Sandwich_function_03(20);
 
   while (1)
   {
-//  Sandwich_function_01(20);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-  
-  // Servo_start();
-
-
-
-  // if (i >= 100) i = 0;
-  // i = i+5;
-  // get_Encoder_information_printf(&encoderInfo, htim2, &Enc_Count, &speed);
-//	 Turn_round(20, 0, 3);
-//	  HAL_Delay(3000);
-	  // Turn_round(24, 6, 2);
-//	  HAL_Delay(30000);
-  // Turn_round(20, 30, 1); 
+   
   }
   /* USER CODE END 3 */
 }

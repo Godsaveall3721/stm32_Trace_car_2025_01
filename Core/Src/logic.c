@@ -265,7 +265,7 @@
 
     if(HCSR04_GetValue()<80)  // 进入田字格转弯
     { 
-        Turn_round(19, 3, 7);  // 开始转弯
+        Turn_round(19, 3, 10);  // 开始转弯
         flag_roun = 0x1 & ~HAL_GPIO_ReadPin(gray_6);    // 读取待测灰度
         if (flag_roun == 1) {                          //如果已经被占,等待解除
         while (1) { 
@@ -355,8 +355,8 @@
     */
     int flag=0;
     void Sandwich_function_03(uint8_t base_speed){
-        Servo_straight();
-        if(HCSR04_GetValue()<80)
+        Servo_straight(); // 正前方
+        if(HCSR04_GetValue()<80) // 第一个拐角
         {
             Turn_round(20, 0, 3); 
             HAL_Delay(400);
@@ -378,7 +378,7 @@
                 Servo_straight();
                 }else if(HCSR04_GetValue()>80)//第一个角没有障碍物,开始左拐,向下一个十字路口准备
         {
-       Turn_round(18, 10,11);  // 开始转弯
+       Turn_round(18, 10,11);  // 开始第一个转弯
         flag = 0x1 & ~HAL_GPIO_ReadPin(gray_3);    // 读取待测灰度
         if (flag == 1) {                          //如果已经被占,等待解除
         while (1) { 
@@ -396,7 +396,7 @@
 
     HAL_Delay(1200);
     flag = 0; // 清零flag给下个阶段使用
-            while(1)                                                         //走到下一个十字路口
+            while(1)                                                         //走到下一个十字路口停车
             {
             Sandwich_function_02_der(20);
             if(HAL_GPIO_ReadPin(gray_1) == 0)
@@ -412,7 +412,7 @@
 
 
 
-        Servo_left(); 
+        Servo_left();  // 舵机左看
         HAL_Delay(500);                                            //旋转舵机开始检测障碍物
         if(HCSR04_GetValue()<80)                                  //如果有障碍物
         {
@@ -453,13 +453,13 @@
                    Turn_round(0, 0, 5); 
                 HAL_GPIO_WritePin(LED_ON_GPIO_Port,LED_ON_Pin,1);//走到终点
                 Servo_straight();
-        }else if(HCSR04_GetValue()>80)
+        }else if(HCSR04_GetValue()>80) // 走到尽头
         {
             Turn_round(20, 0, 3); 
             HAL_Delay(400);
             while(1)
             {
-             Sandwich_function_02_der(base_speed); 
+             Sandwich_function_02_der(base_speed);  // 尽头停车
                if (HAL_GPIO_ReadPin(gray_1) == 0){
                   HAL_Delay(10);
                if (HAL_GPIO_ReadPin(gray_1) == 0){
@@ -476,14 +476,14 @@
             if(HCSR04_GetValue()<80)
             {
                 Turn_round(20, 20, 8);  // 开始转弯
-        flag = 0x1 & ~HAL_GPIO_ReadPin(gray_6);    // 读取待测灰度
+        flag = 0x1 & ~HAL_GPIO_ReadPin(gray_2);    // 读取待测灰度
         if (flag == 1) {                          //如果已经被占,等待解除
         while (1) { 
-            flag = 0x1 & ~HAL_GPIO_ReadPin(gray_6);
+            flag = 0x1 & ~HAL_GPIO_ReadPin(gray_2);
             if(flag == 0 ) break;}
         }
         while (1) {                                        // 转弯完成时,跳出等待         
-            flag = 0x1 & ~HAL_GPIO_ReadPin(gray_6);
+            flag = 0x1 & ~HAL_GPIO_ReadPin(gray_2);
             if (flag==1)
             {
                 break;

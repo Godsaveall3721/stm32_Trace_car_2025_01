@@ -183,7 +183,7 @@ HAL_Delay(1000);
 
           }
     } 
-    if(count == 2 || count ==4) {
+    if(count == 3 || count ==4) {
                 Turn_round(20, 0, 3); 
                 HAL_Delay(300);
                 Turn_round(0, 0, 5); 
